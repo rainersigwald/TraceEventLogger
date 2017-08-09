@@ -45,6 +45,7 @@ namespace TraceEventLogger
             e.ph = "B";
             e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
             e.tid = args.ThreadId;
+            e.pid = args.BuildEventContext.NodeId;
 
             events.Add(e);
         }
@@ -56,6 +57,7 @@ namespace TraceEventLogger
             e.ph = "E";
             e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
             e.tid = args.ThreadId;
+            e.pid = args.BuildEventContext.NodeId;
 
             events.Add(e);
         }
@@ -68,6 +70,7 @@ namespace TraceEventLogger
             e.ph = "B";
             e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
             e.tid = args.ThreadId;
+            e.pid = args.BuildEventContext.NodeId;
 
             events.Add(e);
         }
@@ -79,6 +82,7 @@ namespace TraceEventLogger
             e.ph = "E";
             e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
             e.tid = args.ThreadId;
+            e.pid = args.BuildEventContext.NodeId;
 
             events.Add(e);
         }
