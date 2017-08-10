@@ -50,10 +50,10 @@ namespace TraceEventLogger
             {
                 name = $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "B",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId,
-                args = new Dictionary<string, string> { { "targets", args.TargetNames } },
+                args = new Dictionary<string, string> {{"targets", args.TargetNames}},
             };
 
             events.Add(e);
@@ -66,7 +66,7 @@ namespace TraceEventLogger
                     cat = "p2p",
                     name = $"MSBuild \"{args.ProjectFile}\"",
                     ph = "s",
-                    ts = (uint) (callingMsbuildTaskInvocation.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                    ts = (callingMsbuildTaskInvocation.Timestamp - firstObservedTime).TotalMicroseconds(),
                     tid = args.ParentProjectBuildEventContext.ProjectInstanceId,
                     pid = args.ParentProjectBuildEventContext.NodeId,
                     args = new Dictionary<string, string> {{"targets", args.TargetNames}},
@@ -80,7 +80,7 @@ namespace TraceEventLogger
                     cat = "p2p",
                     name = $"MSBuild \"{args.ProjectFile}\"",
                     ph = "f",
-                    ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000 + 1,
+                    ts = (args.Timestamp - firstObservedTime).TotalMicroseconds() + 1,
                     tid = args.BuildEventContext.ProjectInstanceId,
                     pid = args.BuildEventContext.NodeId,
                     args = new Dictionary<string, string> {{"targets", args.TargetNames}},
@@ -97,7 +97,7 @@ namespace TraceEventLogger
             {
                 name = $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "E",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId
             };
@@ -113,7 +113,7 @@ namespace TraceEventLogger
                 name =
                     $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "B",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId
             };
@@ -128,7 +128,7 @@ namespace TraceEventLogger
                 name =
                     $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "E",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId
             };
@@ -142,6 +142,14 @@ namespace TraceEventLogger
             {
                 msbuildStartEvents[e.BuildEventContext.ProjectInstanceId] = e;
             }
+        }
+    }
+
+    static class TimeSpanExtensions
+    {
+        public static uint TotalMicroseconds(this TimeSpan ts)
+        {
+            return (uint) ts.TotalMilliseconds * 1_000;
         }
     }
 }
