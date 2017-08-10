@@ -40,24 +40,28 @@ namespace TraceEventLogger
 
         private void ProjectStartedHandler(object sender, ProjectStartedEventArgs args)
         {
-            var e = new TraceEvent();
-            e.name = $"Project \"{args.ProjectFile}\" ({args.ProjectId}) started";
-            e.ph = "B";
-            e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
-            e.tid = args.ThreadId;
-            e.pid = args.BuildEventContext.NodeId;
+            var e = new TraceEvent
+            {
+                name = $"Project \"{args.ProjectFile}\" ({args.ProjectId}) started",
+                ph = "B",
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                tid = args.ThreadId,
+                pid = args.BuildEventContext.NodeId
+            };
 
             events.Add(e);
         }
 
         private void ProjectFinishedHandler(object sender, ProjectFinishedEventArgs args)
         {
-            var e = new TraceEvent();
-            e.name = $"Project \"{args.ProjectFile}\" finished";
-            e.ph = "E";
-            e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
-            e.tid = args.ThreadId;
-            e.pid = args.BuildEventContext.NodeId;
+            var e = new TraceEvent
+            {
+                name = $"Project \"{args.ProjectFile}\" finished",
+                ph = "E",
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                tid = args.ThreadId,
+                pid = args.BuildEventContext.NodeId
+            };
 
             events.Add(e);
         }
@@ -65,24 +69,30 @@ namespace TraceEventLogger
 
         private void TargetStartedHandler(object sender, TargetStartedEventArgs args)
         {
-            var e = new TraceEvent();
-            e.name = $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) started";
-            e.ph = "B";
-            e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
-            e.tid = args.ThreadId;
-            e.pid = args.BuildEventContext.NodeId;
+            var e = new TraceEvent
+            {
+                name =
+                    $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) started",
+                ph = "B",
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                tid = args.ThreadId,
+                pid = args.BuildEventContext.NodeId
+            };
 
             events.Add(e);
         }
 
         private void TargetFinishedHandler(object sender, TargetFinishedEventArgs args)
         {
-            var e = new TraceEvent();
-            e.name = $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) finished";
-            e.ph = "E";
-            e.ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds;
-            e.tid = args.ThreadId;
-            e.pid = args.BuildEventContext.NodeId;
+            var e = new TraceEvent
+            {
+                name =
+                    $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) finished",
+                ph = "E",
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                tid = args.ThreadId,
+                pid = args.BuildEventContext.NodeId
+            };
 
             events.Add(e);
         }
