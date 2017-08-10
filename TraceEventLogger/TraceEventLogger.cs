@@ -45,8 +45,8 @@ namespace TraceEventLogger
                 name = $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "B",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
-                tid = args.ThreadId,
-                pid = args.BuildEventContext.NodeId
+                tid = args.BuildEventContext.ProjectInstanceId,
+                pid = args.BuildEventContext.NodeId,
             };
 
             events.Add(e);
@@ -59,7 +59,7 @@ namespace TraceEventLogger
                 name = $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "E",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
-                tid = args.ThreadId,
+                tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId
             };
 
@@ -75,7 +75,7 @@ namespace TraceEventLogger
                     $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "B",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
-                tid = args.ThreadId,
+                tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId
             };
 
@@ -90,7 +90,7 @@ namespace TraceEventLogger
                     $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "E",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
-                tid = args.ThreadId,
+                tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId
             };
 
