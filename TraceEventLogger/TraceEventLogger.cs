@@ -32,7 +32,7 @@ namespace TraceEventLogger
                 serializer.Serialize(file, events);
             }
         }
-        
+
         private void BuildStartedHandler(object sender, BuildStartedEventArgs args)
         {
             firstObservedTime = args.Timestamp;
@@ -44,7 +44,7 @@ namespace TraceEventLogger
             {
                 name = $"Project \"{args.ProjectFile}\" ({args.ProjectId}) started",
                 ph = "B",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
                 pid = args.BuildEventContext.NodeId
             };
@@ -58,7 +58,7 @@ namespace TraceEventLogger
             {
                 name = $"Project \"{args.ProjectFile}\" finished",
                 ph = "E",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
                 pid = args.BuildEventContext.NodeId
             };
@@ -74,7 +74,7 @@ namespace TraceEventLogger
                 name =
                     $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) started",
                 ph = "B",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
                 pid = args.BuildEventContext.NodeId
             };
@@ -89,7 +89,7 @@ namespace TraceEventLogger
                 name =
                     $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) finished",
                 ph = "E",
-                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds,
+                ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
                 pid = args.BuildEventContext.NodeId
             };
