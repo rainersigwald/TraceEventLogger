@@ -47,6 +47,7 @@ namespace TraceEventLogger
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.BuildEventContext.ProjectInstanceId,
                 pid = args.BuildEventContext.NodeId,
+                args = new Dictionary<string, string> { { "targets", args.TargetNames } },
             };
 
             events.Add(e);
