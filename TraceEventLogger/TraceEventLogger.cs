@@ -51,6 +51,36 @@ namespace TraceEventLogger
             };
 
             events.Add(e);
+
+
+            var fs = new TraceEvent
+            {
+                cat = "p2p",
+                name = $"MSBuild \"{args.ProjectFile}\"",
+                ph = "s",
+                ts = (uint)(args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                tid = args.ParentProjectBuildEventContext.ProjectInstanceId,
+                pid = args.ParentProjectBuildEventContext.NodeId,
+                args = new Dictionary<string, string> { { "targets", args.TargetNames } },
+                id = args.BuildEventContext.BuildRequestId.ToString(),
+            };
+
+            events.Add(fs);
+
+            var ff = new TraceEvent
+            {
+                cat = "p2p",
+                name = $"MSBuild \"{args.ProjectFile}\"",
+                ph = "f",
+                ts = (uint)(args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                tid = args.BuildEventContext.ProjectInstanceId,
+                pid = args.BuildEventContext.NodeId,
+                args = new Dictionary<string, string> { { "targets", args.TargetNames } },
+                id = args.BuildEventContext.BuildRequestId.ToString(),
+            };
+
+            events.Add(ff);
+
         }
 
         private void ProjectFinishedHandler(object sender, ProjectFinishedEventArgs args)

@@ -46,5 +46,7 @@ namespace TraceEventLogger
         /// Any arguments provided for the event. Some of the event types have required argument fields, otherwise, you can put any information you wish in here. The arguments are displayed in Trace Viewer when you view an event in the analysis section.
         /// </summary>
         public Dictionary<string, string> args;
+
+        public string id;
     }
 }
