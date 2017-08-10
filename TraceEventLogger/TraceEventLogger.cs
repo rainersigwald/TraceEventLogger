@@ -13,6 +13,9 @@ namespace TraceEventLogger
 
         private readonly List<TraceEvent> events = new List<TraceEvent>();
 
+        private readonly Dictionary<int, TaskStartedEventArgs> msbuildStartEvents =
+            new Dictionary<int, TaskStartedEventArgs>();
+
         public override void Initialize(IEventSource eventSource)
         {
             eventSource.BuildStarted += BuildStartedHandler;
@@ -22,6 +25,9 @@ namespace TraceEventLogger
 
             eventSource.TargetStarted += TargetStartedHandler;
             eventSource.TargetFinished += TargetFinishedHandler;
+
+            eventSource.TaskStarted += TaskStartedHandler;
+
         }
 
         public override void Shutdown()
@@ -52,35 +58,37 @@ namespace TraceEventLogger
 
             events.Add(e);
 
-
-            var fs = new TraceEvent
+            if (msbuildStartEvents.TryGetValue(args.ParentProjectBuildEventContext.ProjectInstanceId,
+                out var callingMsbuildTaskInvocation))
             {
-                cat = "p2p",
-                name = $"MSBuild \"{args.ProjectFile}\"",
-                ph = "s",
-                ts = (uint)(args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
-                tid = args.ParentProjectBuildEventContext.ProjectInstanceId,
-                pid = args.ParentProjectBuildEventContext.NodeId,
-                args = new Dictionary<string, string> { { "targets", args.TargetNames } },
-                id = args.BuildEventContext.BuildRequestId.ToString(),
-            };
+                var fs = new TraceEvent
+                {
+                    cat = "p2p",
+                    name = $"MSBuild \"{args.ProjectFile}\"",
+                    ph = "s",
+                    ts = (uint) (callingMsbuildTaskInvocation.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
+                    tid = args.ParentProjectBuildEventContext.ProjectInstanceId,
+                    pid = args.ParentProjectBuildEventContext.NodeId,
+                    args = new Dictionary<string, string> {{"targets", args.TargetNames}},
+                    id = args.BuildEventContext.BuildRequestId.ToString(),
+                };
 
-            events.Add(fs);
+                events.Add(fs);
 
-            var ff = new TraceEvent
-            {
-                cat = "p2p",
-                name = $"MSBuild \"{args.ProjectFile}\"",
-                ph = "f",
-                ts = (uint)(args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
-                tid = args.BuildEventContext.ProjectInstanceId,
-                pid = args.BuildEventContext.NodeId,
-                args = new Dictionary<string, string> { { "targets", args.TargetNames } },
-                id = args.BuildEventContext.BuildRequestId.ToString(),
-            };
+                var ff = new TraceEvent
+                {
+                    cat = "p2p",
+                    name = $"MSBuild \"{args.ProjectFile}\"",
+                    ph = "f",
+                    ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000 + 1,
+                    tid = args.BuildEventContext.ProjectInstanceId,
+                    pid = args.BuildEventContext.NodeId,
+                    args = new Dictionary<string, string> {{"targets", args.TargetNames}},
+                    id = args.BuildEventContext.BuildRequestId.ToString(),
+                };
 
-            events.Add(ff);
-
+                events.Add(ff);
+            }
         }
 
         private void ProjectFinishedHandler(object sender, ProjectFinishedEventArgs args)
@@ -126,6 +134,14 @@ namespace TraceEventLogger
             };
 
             events.Add(e);
+        }
+
+        private void TaskStartedHandler(object sender, TaskStartedEventArgs e)
+        {
+            if (e.TaskName.EndsWith("MSBuild"))
+            {
+                msbuildStartEvents[e.BuildEventContext.ProjectInstanceId] = e;
+            }
         }
     }
 }
