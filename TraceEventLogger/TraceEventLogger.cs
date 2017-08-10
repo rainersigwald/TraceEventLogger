@@ -42,7 +42,7 @@ namespace TraceEventLogger
         {
             var e = new TraceEvent
             {
-                name = $"Project \"{args.ProjectFile}\" ({args.ProjectId}) started",
+                name = $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "B",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
@@ -56,7 +56,7 @@ namespace TraceEventLogger
         {
             var e = new TraceEvent
             {
-                name = $"Project \"{args.ProjectFile}\" finished",
+                name = $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "E",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
@@ -72,7 +72,7 @@ namespace TraceEventLogger
             var e = new TraceEvent
             {
                 name =
-                    $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) started",
+                    $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "B",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
@@ -87,7 +87,7 @@ namespace TraceEventLogger
             var e = new TraceEvent
             {
                 name =
-                    $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) finished",
+                    $"Target \"{args.TargetName}\" in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
                 ph = "E",
                 ts = (uint) (args.Timestamp - firstObservedTime).TotalMilliseconds * 1000,
                 tid = args.ThreadId,
