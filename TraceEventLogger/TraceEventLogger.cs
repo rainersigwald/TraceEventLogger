@@ -27,6 +27,7 @@ namespace TraceEventLogger
             eventSource.TargetFinished += TargetFinishedHandler;
 
             eventSource.TaskStarted += TaskStartedHandler;
+            eventSource.TaskFinished += TaskFinishedHandler;
 
         }
 
@@ -136,13 +137,44 @@ namespace TraceEventLogger
             events.Add(e);
         }
 
-        private void TaskStartedHandler(object sender, TaskStartedEventArgs e)
+        private void TaskStartedHandler(object sender, TaskStartedEventArgs args)
         {
-            if (e.TaskName.EndsWith("MSBuild"))
+            if (args.TaskName.EndsWith("MSBuild"))
             {
-                msbuildStartEvents[e.BuildEventContext.ProjectInstanceId] = e;
+                msbuildStartEvents[args.BuildEventContext.ProjectInstanceId] = args;
+
+                var e = new TraceEvent
+                {
+                    name =
+                        $"MSBuild (yielded) in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
+                    ph = "B",
+                    ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
+                    tid = args.BuildEventContext.ProjectInstanceId,
+                    pid = args.BuildEventContext.NodeId
+                };
+
+                events.Add(e);
             }
         }
+
+        private void TaskFinishedHandler(object sender, TaskFinishedEventArgs args)
+        {
+            if (args.TaskName.EndsWith("MSBuild"))
+            {
+                var e = new TraceEvent
+                {
+                    name =
+                        $"MSBuild (yielded) in project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId})",
+                    ph = "E",
+                    ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
+                    tid = args.BuildEventContext.ProjectInstanceId,
+                    pid = args.BuildEventContext.NodeId
+                };
+
+                events.Add(e);
+            }
+        }
+
     }
 
     static class TimeSpanExtensions
