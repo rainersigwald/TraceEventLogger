@@ -29,6 +29,7 @@ namespace TraceEventLogger
             eventSource.TaskStarted += TaskStartedHandler;
             eventSource.TaskFinished += TaskFinishedHandler;
 
+            eventSource.AnyEventRaised += EventSourceOnAnyEventRaised;
         }
 
         public override void Shutdown()
@@ -175,6 +176,43 @@ namespace TraceEventLogger
             }
         }
 
+        private void EventSourceOnAnyEventRaised(object sender, BuildEventArgs buildEventArgs)
+        {
+            TraceEvent e = null;
+
+            switch (buildEventArgs)
+            {
+                case ProjectEvaluationStartedEventArgs args:
+                    e = new TraceEvent
+                    {
+                        name =
+                            $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) evaluation",
+                        ph = "B",
+                        ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
+                        tid = args.BuildEventContext.ProjectInstanceId,
+                        pid = args.BuildEventContext.NodeId,
+                    };
+                    break;
+                case ProjectEvaluationFinishedEventArgs args:
+                    e = new TraceEvent
+                    {
+                        name =
+                            $"Project \"{args.ProjectFile}\" ({args.BuildEventContext.ProjectInstanceId}) evaluation",
+                        ph = "E",
+                        ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
+                        tid = args.BuildEventContext.ProjectInstanceId,
+                        pid = args.BuildEventContext.NodeId,
+                    };
+
+                    events.Add(e);
+                    break;
+            }
+
+            if (e != null)
+            {
+                events.Add(e);
+            }
+        }
     }
 
     static class TimeSpanExtensions
