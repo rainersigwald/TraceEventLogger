@@ -149,7 +149,7 @@ namespace TraceEventLogger
     {
         public static uint TotalMicroseconds(this TimeSpan ts)
         {
-            return (uint) ts.TotalMilliseconds * 1_000;
+            return Convert.ToUInt32(ts.TotalMilliseconds * 1_000);
         }
     }
 }
