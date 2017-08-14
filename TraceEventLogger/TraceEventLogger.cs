@@ -82,7 +82,7 @@ namespace TraceEventLogger
                     cat = "p2p",
                     name = $"MSBuild \"{args.ProjectFile}\"",
                     ph = "f",
-                    ts = (args.Timestamp - firstObservedTime).TotalMicroseconds() + 1,
+                    ts = (args.Timestamp - firstObservedTime).TotalMicroseconds() - 1,
                     tid = args.BuildEventContext.ProjectInstanceId,
                     pid = args.BuildEventContext.NodeId,
                     args = new Dictionary<string, string> {{"targets", args.TargetNames}},
