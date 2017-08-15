@@ -1,6 +1,8 @@
 # TraceEventLogger
 An MSBuild logger that emits trace_event JSON suitable for Chrome’s [Trace-Viewer](https://github.com/catapult-project/catapult/blob/master/tracing/README.md).
 
+![Screenshot showing a timeline with targets flowing to one another](docs/screenshot.png)
+
 ## Usage
 
 Because this logger doesn't preserve all of the information needed to debug builds in general, it's a good idea to capture a [binary log](https://github.com/Microsoft/msbuild/wiki/Binary-Log) and replay it through this logger.
