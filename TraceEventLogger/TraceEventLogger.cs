@@ -54,7 +54,7 @@ namespace TraceEventLogger
                 ph = "B",
                 ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
-                pid = args.BuildEventContext.NodeId,
+                pid = args.BuildEventContext.NodeId.ToString(),
                 args = new Dictionary<string, string> {{"targets", args.TargetNames}},
             };
 
@@ -70,7 +70,7 @@ namespace TraceEventLogger
                     ph = "s",
                     ts = (callingMsbuildTaskInvocation.Timestamp - firstObservedTime).TotalMicroseconds() + 1,
                     tid = args.ParentProjectBuildEventContext.ProjectInstanceId,
-                    pid = args.ParentProjectBuildEventContext.NodeId,
+                    pid = args.ParentProjectBuildEventContext.NodeId.ToString(),
                     args = new Dictionary<string, string> {{"targets", args.TargetNames}},
                     id = args.BuildEventContext.BuildRequestId.ToString(),
                 };
@@ -84,7 +84,7 @@ namespace TraceEventLogger
                     ph = "f",
                     ts = (args.Timestamp - firstObservedTime).TotalMicroseconds() - 1,
                     tid = args.BuildEventContext.ProjectInstanceId,
-                    pid = args.BuildEventContext.NodeId,
+                    pid = args.BuildEventContext.NodeId.ToString(),
                     args = new Dictionary<string, string> {{"targets", args.TargetNames}},
                     id = args.BuildEventContext.BuildRequestId.ToString(),
                 };
@@ -101,7 +101,7 @@ namespace TraceEventLogger
                 ph = "E",
                 ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
-                pid = args.BuildEventContext.NodeId
+                pid = args.BuildEventContext.NodeId.ToString(),
             };
 
             events.Add(e);
@@ -117,7 +117,7 @@ namespace TraceEventLogger
                 ph = "B",
                 ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
-                pid = args.BuildEventContext.NodeId
+                pid = args.BuildEventContext.NodeId.ToString(),
             };
 
             events.Add(e);
@@ -132,7 +132,7 @@ namespace TraceEventLogger
                 ph = "E",
                 ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                 tid = args.BuildEventContext.ProjectInstanceId,
-                pid = args.BuildEventContext.NodeId
+                pid = args.BuildEventContext.NodeId.ToString(),
             };
 
             events.Add(e);
@@ -151,7 +151,7 @@ namespace TraceEventLogger
                     ph = "B",
                     ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                     tid = args.BuildEventContext.ProjectInstanceId,
-                    pid = args.BuildEventContext.NodeId
+                    pid = args.BuildEventContext.NodeId.ToString(),
                 };
 
                 events.Add(e);
@@ -169,7 +169,7 @@ namespace TraceEventLogger
                     ph = "E",
                     ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                     tid = args.BuildEventContext.ProjectInstanceId,
-                    pid = args.BuildEventContext.NodeId
+                    pid = args.BuildEventContext.NodeId.ToString(),
                 };
 
                 events.Add(e);
@@ -190,7 +190,7 @@ namespace TraceEventLogger
                         ph = "B",
                         ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                         tid = args.BuildEventContext.ProjectInstanceId,
-                        pid = args.BuildEventContext.NodeId,
+                        pid = args.BuildEventContext.NodeId == BuildEventContext.InvalidNodeId ? "Evaluation" : args.BuildEventContext.NodeId.ToString(),
                     };
                     break;
                 case ProjectEvaluationFinishedEventArgs args:
@@ -201,7 +201,7 @@ namespace TraceEventLogger
                         ph = "E",
                         ts = (args.Timestamp - firstObservedTime).TotalMicroseconds(),
                         tid = args.BuildEventContext.ProjectInstanceId,
-                        pid = args.BuildEventContext.NodeId,
+                        pid = args.BuildEventContext.NodeId == BuildEventContext.InvalidNodeId ? "Evaluation" : args.BuildEventContext.NodeId.ToString(),
                     };
 
                     events.Add(e);

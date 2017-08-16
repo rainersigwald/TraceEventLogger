@@ -35,7 +35,7 @@ namespace TraceEventLogger
         /// <summary>
         /// The process ID for the process that output this event.
         /// </summary>
-        public int pid;
+        public string pid;
 
         /// <summary>
         /// The thread ID for the process that output this event.
