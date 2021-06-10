@@ -36,7 +36,10 @@ namespace TraceEventLogger
         {
             using (StreamWriter file = File.CreateText(@"msbuild_events.json"))
             {
-                JsonSerializer serializer = new JsonSerializer();
+                JsonSerializer serializer = new JsonSerializer
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                };
                 serializer.Serialize(file, events);
             }
         }
